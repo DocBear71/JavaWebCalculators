@@ -23,11 +23,13 @@ public class FractionServlet extends HttpServlet {
         // Step 1: Get parameters
         String num1 = req.getParameter("num1");
         String den1 =  req.getParameter("den1");
+        String operator = req.getParameter("operator");
         String num2 = req.getParameter("num2");
         String den2 = req.getParameter("den2");
         // Step 2: Set parameters as attributes on the request object
         req.setAttribute("num1",num1);
         req.setAttribute("den1",den1);
+        req.setAttribute("operator",operator);
         req.setAttribute("num2",num2);
         req.setAttribute("den2",den2);
         // Step 4: Validate the data
@@ -45,6 +47,10 @@ public class FractionServlet extends HttpServlet {
         } else if(!isValidInteger(den1)) {
             errorsFound = true;
             req.setAttribute("den1Error", "<li>Denominator 1 is not a valid integer</li>");
+        }
+        if(operator == null || !operator.matches("(add|subtract|multiply|divide)")) {
+            errorsFound = true;
+            req.setAttribute("operatorError", "<li>Operator is invalid</li>");
         }
         if(num2 == null || num2.isEmpty()) {
             errorsFound = true;
@@ -79,8 +85,22 @@ public class FractionServlet extends HttpServlet {
         }
         // Step 6: Produce the result
         if(!errorsFound) {
-            Fraction fraction3 = fraction1.add(fraction2);
-            String result = String.format("%s + %s = %s", fraction1.toMixedNumber(), fraction2.toMixedNumber(), fraction3.toMixedNumber());
+            Fraction fraction3 = null;
+            String operatorStr = "";
+            if(operator.equals("add")) {
+                fraction3 = fraction1.add(fraction2);
+                operatorStr = "+";
+            } else if(operator.equals("subtract")) {
+                fraction3 = fraction1.subtract(fraction2);
+                operatorStr = "-";
+            } else if(operator.equals("multiply")) {
+                fraction3 = fraction1.multiply(fraction2);
+                operatorStr = "×";
+            } else if(operator.equals("divide")) {
+                fraction3 = fraction1.divide(fraction2);
+                operatorStr = "÷";
+            }
+            String result = String.format("%s %s %s = %s", fraction1.toMixedNumber(), operatorStr, fraction2.toMixedNumber(), fraction3.toMixedNumber());
             req.setAttribute("result", result);
         }
         // Step 3: Forward the request and response objects to the JSP

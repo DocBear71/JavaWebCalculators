@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -22,8 +23,13 @@
                     <input type="text" class="form-control" placeholder="Denominator 1" aria-label="Denominator 1" name="den1" value="${den1}">
                 </div>
             </div>
-            <div class="col-1 d-flex justify-content-center display-3">
-                <span>+</span>
+            <div class="col-1 d-flex justify-content-center align-items-center display-3">
+                <select class="form-select form-select-lg" aria-label="Mathematical operator" name="operator">
+                    <option <c:if test="${operator == 'add'}">selected</c:if> value="add">+</option>
+                    <option <c:if test="${operator == 'subtract'}">selected</c:if> value="subtract">-</option>
+                    <option <c:if test="${operator == 'multiply'}">selected</c:if> value="multiply">×</option>
+                    <option <c:if test="${operator == 'divide'}">selected</c:if> value="divide">÷</option>
+                </select>
             </div>
             <div class="col-2">
                 <div class="form-group mb-2 pb-2 border-bottom border-5">
@@ -40,6 +46,7 @@
     <ul class="text-danger">
         ${num1Error}
         ${den1Error}
+        ${operatorError}
         ${num2Error}
         ${den2Error}
     </ul>
